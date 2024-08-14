@@ -12,9 +12,9 @@ import os
 
 index_name = "csye7125-chunks-250"
 namespace = "default"
-print(os.getenv("GROQ_API_KEY"))
-print(os.getenv("PINECONE_API_KEY"))
-print(os.getenv("HFACE_API_TOKEN"))
+# print(os.getenv("GROQ_API_KEY"))
+# print(os.getenv("PINECONE_API_KEY"))
+# print(os.getenv("HFACE_API_TOKEN"))
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 os.environ["PINECONE_API_KEY"] = os.getenv("PINECONE_API_KEY")
 pinecone = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
