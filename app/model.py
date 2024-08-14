@@ -10,8 +10,9 @@ from langchain.embeddings import HuggingFaceHubEmbeddings
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 import os
 
-index_name = "csye7125-chunks-250"
-namespace = "default"
+index_name = os.getenv("PINECONE_INDEX_NAME")
+namespace = os.getenv("PINECONE_NAMESPACE")
+model_name = os.getenv("GROQ_MODEL_NAME")
 # print(os.getenv("GROQ_API_KEY"))
 # print(os.getenv("PINECONE_API_KEY"))
 # print(os.getenv("HFACE_API_TOKEN"))
@@ -20,7 +21,7 @@ os.environ["PINECONE_API_KEY"] = os.getenv("PINECONE_API_KEY")
 pinecone = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
 # Set up the embedding model to use via Hugging Face Inference API
-embeddings = HuggingFaceEndpointEmbeddings(
+embeddings = HuggingFaceHubEmbeddings(
     repo_id="sentence-transformers/all-MiniLM-L6-v2",  # Public model name on Hugging Face
     huggingfacehub_api_token=os.getenv("HFACE_API_TOKEN")  # Your Hugging Face API token
 )
@@ -37,7 +38,7 @@ db = PineconeVectorStore(
 )
 
 llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
+    model=model_name,
     temperature=0,
     max_tokens=None,
     timeout=None,
@@ -52,7 +53,7 @@ Helpful Answer:"""
 QA_CHAIN_PROMPT = PromptTemplate.from_template(template)
 
 retriever = db.as_retriever()
-# retriever.search_kwargs = {"k": 15} 
+# retriever.search_kwargs = {"k": 5} 
 
 # Create the RetrievalQA chain
 qa_chain = RetrievalQA.from_chain_type(
