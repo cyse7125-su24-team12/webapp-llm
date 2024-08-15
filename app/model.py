@@ -9,6 +9,10 @@ from pinecone import Pinecone
 from langchain.embeddings import HuggingFaceHubEmbeddings
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 import os
+from . import create_json_logger
+
+# Initialize logger
+logger = create_json_logger()
 
 index_name = os.getenv("PINECONE_INDEX_NAME")
 namespace = os.getenv("PINECONE_NAMESPACE")
@@ -25,7 +29,6 @@ embeddings = HuggingFaceHubEmbeddings(
     repo_id="sentence-transformers/all-MiniLM-L6-v2",  # Public model name on Hugging Face
     huggingfacehub_api_token=os.getenv("HFACE_API_TOKEN")  # Your Hugging Face API token
 )
-
 
 # Create an index if it does not exist
 existing_indexes = [ index.name for index in pinecone.list_indexes() ]
@@ -63,15 +66,12 @@ qa_chain = RetrievalQA.from_chain_type(
     chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
 )
 
-# result = qa_chain.run("what is the scope and attack vector of SINEC NMS vulnerability?")
-# Query FAISS and retrieve documents
-
-# print(result)
-
 def generate_response(prompt):
-    # Your model logic here
-    try :
-        response = qa_chain.invoke(prompt)  # Placeholder response
+    logger.info(f"Generating response for prompt: {prompt}")
+    try:
+        response = qa_chain.invoke(prompt)
+        logger.info(f"Generated response: {response}")
     except Exception as e:
+        logger.error(f"Error generating response: {e}")
         response = f"Error: {e}"
     return response
