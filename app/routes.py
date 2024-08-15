@@ -13,7 +13,7 @@ def generate():
     return jsonify({"response": response})
 
 @main.route('/generate', methods=['GET','HEAD','PUT', 'DELETE', 'PATCH', 'OPTIONS'])
-def healthz_method_not_allowed():
+def generate_method_not_allowed():
     return jsonify({"error": "Method not allowed"}), 405 
 
 @main.route('/', methods=['GET'])
@@ -21,7 +21,7 @@ def index():
     return jsonify({"message": "Hello, world!"})
 
 @main.route('/', methods=['POST','HEAD','PUT', 'DELETE', 'PATCH', 'OPTIONS'])
-def healthz_method_not_allowed():
+def index_method_not_allowed():
     return jsonify({"error": "Method not allowed"}), 405 
 
 @main.route('/healthz', methods=['GET'])
