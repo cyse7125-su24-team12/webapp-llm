@@ -17,6 +17,7 @@ namespace = os.getenv("PINECONE_NAMESPACE")
 pinecone_api_key = os.getenv("PINECONE_API_KEY")
 hface_api_token = os.getenv("HFACE_API_TOKEN")
 ollama_url = os.getenv("OLLAMA_URL")
+model_name = os.getenv("MODEL_NAME")
 # print(os.getenv("GROQ_API_KEY"))
 # print(os.getenv("PINECONE_API_KEY"))
 # print(os.getenv("HFACE_API_TOKEN"))
@@ -42,7 +43,7 @@ retriever.search_kwargs = {"k": 5}
 
 model = Ollama(
     base_url=ollama_url, 
-    model = "llama3:8b",
+    model = model_name,
     temperature = 0,
     callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 )
