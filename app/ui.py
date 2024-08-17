@@ -1,32 +1,35 @@
-import streamlit as st
 import requests
-# from .model import generate_response
+import streamlit as st
 import os
 
 model_name = os.getenv("MODEL_NAME")
 
-st.title("Chat with CVE-LLM")
+st.title("CVE-LLM")
 
-# User input area (Question box)
-user_input = st.text_area("Your Question:", key="input", height=100)
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Answer display area (Answer box)
-answer_placeholder = st.empty()
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Send user input to the Flask API and display the response in the Answer box
-if st.button("Send") and user_input:
-    response = requests.post(
+if prompt := st.chat_input("What is up?"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    answer=""
+    with st.chat_message("assistant") and st.spinner("Generating..."):
+        response = requests.post(
         "http://localhost:5000/generate",
         json={
             "model": model_name,
-            "prompt": user_input,
+            "prompt": prompt,
             "stream": False
         }
-    )
-    # response = generate_response(user_input)
-    response_data = response.json()
-    answer = response_data.get("response",{}).get("result", "No response received.")
-    
-    # Display the answer in the Answer box
-    answer_placeholder.text_area("Answer:", value=answer, height=300)
+        )
+        response_data = response.json()
+        answer = response_data.get("response",{}).get("result", "No response received.")
 
+    st.session_state.messages.append({"role": "assistant", "content": answer})
+    st.markdown(answer)
