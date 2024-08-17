@@ -1,7 +1,13 @@
+import subprocess
 from flask import Blueprint, request, jsonify
 from .model import generate_response
 
 main = Blueprint('main', __name__)
+
+# @main.route('/generate', methods=['GET'])
+# def load_ui():
+#     # Start the Streamlit UI if it's not already running
+#     subprocess.Popen(["streamlit", "run", "/Users/santhosh/Documents/projects/advcloud/webapp-llm-remote/app/ui.py"])
 
 @main.route('/generate', methods=['POST'])
 def generate():

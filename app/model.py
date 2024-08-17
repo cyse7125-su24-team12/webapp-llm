@@ -65,9 +65,10 @@ qa_chain = RetrievalQA.from_chain_type(
 def generate_response(prompt):
     logger.info(f"Generating response for prompt: {prompt}")
     try:
-        response = ''
-        for chunk in qa_chain.stream("what is the cve_id of SINEC NMS vulnerability?"):
-            response += chunk
+        # for chunk in qa_chain.stream(prompt):
+        #     if not isinstance(chunk, dict):
+        #         response += str(chunk)
+        response = qa_chain.invoke(prompt)
         logger.info(f"Generated response: {response}")
     except Exception as e:
         logger.error(f"Error generating response: {e}")
